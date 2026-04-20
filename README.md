@@ -2,14 +2,11 @@
 
 Talks and workshops I have been giving:
 
-- "Own Your Data Science and AI Workshop" at GOSIM 2026 Paris: "The Adoption of Python Array API in scikit-learn"
-
-- "Probability 1.0" at AdoptAI 2025 Paris: Talk ["Ecosystems, Not Just Code. Building Sustainable OSS Communities"](https://github.com/StefanieSenger/Talks/tree/main/2025_Building_an_OSS_Community)
-
-- PyLadies Berlin 2025: Talk ["Scikit-learn's Metadata Routing API"](https://github.com/StefanieSenger/Talks/tree/main/2024_2025_Metadata-Routing-API)
-
-- PyData Paris 2024: Talk ["Scikit-learn's Metadata Routing API"](https://github.com/StefanieSenger/Talks/tree/main/2024_2025_Metadata-Routing-API)
-
-- PyLadies Paris 2024: Talk ["Starting out on Open Source"](https://github.com/StefanieSenger/Talks/tree/main/2024_Starting-with-open-source)
-
-- EuroSciPy 2023: Tutorial ["Intro to scikit-learn"](https://github.com/StefanieSenger/Talks/tree/main/2023_Intro-to-scikit-learn)
+| Event | Year | Format | Title |
+| :------ | :---: | :-----: | :------ |
+| GOSIM Paris — *Own Your Data Science and AI* | 2026 | Workshop | [The Adoption of Python Array API in scikit-learn](https://github.com/StefanieSenger/Talks/tree/main/2026_Array_API_adoption_in_scikit-learn) |
+| AdoptAI Paris — *Probability 1.0* | 2025 | Talk | [Ecosystems, Not Just Code. Building Sustainable OSS Communities](https://github.com/StefanieSenger/Talks/tree/main/2025_Building_an_OSS_Community) |
+| PyLadies Berlin | 2025 | Talk | [Scikit-learn's Metadata Routing API](https://github.com/StefanieSenger/Talks/tree/main/2024_2025_Metadata-Routing-API) |
+| PyData Paris | 2024 | Talk | [Scikit-learn's Metadata Routing API](https://github.com/StefanieSenger/Talks/tree/main/2024_2025_Metadata-Routing-API) |
+| PyLadies Paris | 2024 | Talk | [Starting out on Open Source](https://github.com/StefanieSenger/Talks/tree/main/2024_Starting-with-open-source) |
+| EuroSciPy | 2023 | Tutorial | [Intro to scikit-learn](https://github.com/StefanieSenger/Talks/tree/main/2023_Intro-to-scikit-learn) |
