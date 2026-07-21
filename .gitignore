@@ -5,6 +5,7 @@
 
 # notes for the talks
 *notes*
+*.odt
 
 # log file
 texput.log
