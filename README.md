@@ -4,8 +4,8 @@ Talks and workshops I have been giving:
 
 | Event | Year | Format | Title |
 | :------ | :---: | :-----: | :------ |
-| EuroSciPy Karków | 2026 | Talk | [Update on Metadata Routing](https://github.com/StefanieSenger/Talks/tree/main/2026_Update_on_Metadata_Routing) |
-| GOSIM Paris — *Own Your Data Science and AI* | 2026 | Workshop | [The Adoption of Python Array API in scikit-learn](https://github.com/StefanieSenger/Talks/tree/main/2026_Array_API_adoption_in_scikit-learn) |
+| EuroSciPy Kraków | 2026 | Talk | [Update on Metadata Routing](https://github.com/StefanieSenger/Talks/tree/main/2026_Update_on_Metadata_Routing) |
+| GOSIM Paris — *Own Your Data Science and AI* | 2026 | Workshop | [Adopting the Python Array API in scikit-learn](https://github.com/StefanieSenger/Talks/tree/main/2026_Array_API_adoption_in_scikit-learn) |
 | AdoptAI Paris — *Probability 1.0* | 2025 | Talk | [Ecosystems, Not Just Code. Building Sustainable OSS Communities](https://github.com/StefanieSenger/Talks/tree/main/2025_Building_an_OSS_Community) |
 | PyLadies Berlin | 2025 | Talk | [Scikit-learn's Metadata Routing API](https://github.com/StefanieSenger/Talks/tree/main/2024_2025_Metadata-Routing-API) |
 | PyData Paris | 2024 | Talk | [Scikit-learn's Metadata Routing API](https://github.com/StefanieSenger/Talks/tree/main/2024_2025_Metadata-Routing-API) |
