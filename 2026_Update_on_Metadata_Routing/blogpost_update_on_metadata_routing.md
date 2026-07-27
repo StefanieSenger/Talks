@@ -243,11 +243,10 @@ richer than `(X, y)`.
   Methods](https://florianwilhelm.info/2017/04/causal_inference_propensity_score/)
   (IPTW with scikit-learn)
 
-[3] Vincent Warmerdam, [:probabl. Whiteboard Series — Improving models via
+[3] [Probabl Whiteboard Series: Improving models via
   subsets](https://www.youtube.com/watch?v=REIg5NH2SNc)
 
-[4] [Metadata Routing User Guide](https://scikit-learn.org/stable/metadata_routing.html) (user-oriented)
+[4] [Metadata Routing in scikit-learn User Guide](https://scikit-learn.org/stable/metadata_routing.html)
 
 [5] [Developing estimators compliant with metadata
-  routing](https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_metadata_routing.html)
-  (developer-oriented)
+  routing](https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_metadata_routing.html) (scikit-learn docs)
