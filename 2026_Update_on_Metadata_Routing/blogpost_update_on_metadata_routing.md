@@ -138,7 +138,7 @@ mode:
 
 ![Slide showing the three routing steps: enable metadata routing, pass metadata at the
 top level, and set requests where metadata is
-consumed](blogpost_images/fig05_routing_api.png)
+consumed](blogpost_images/fig04_routing_api.png)
 
 Figure 4: The three metadata routing steps: enable, pass at the top, request metadata
 where it gets used. See scikit-learn's Metadata Routing User Guide [4] for a full
@@ -185,7 +185,7 @@ The new feature allows users to pass a validation set of their liking through a
 
 ![Pipeline with transform_input=['X_val'] and
 HistGradientBoostingClassifier.set_fit_request(X_val=True,
-y_val=True)](blogpost_images/fig06_transform_input.png)
+y_val=True)](blogpost_images/fig05_transform_input.png)
 
 Figure 5: Passing `X_val` through a `Pipeline` with `transform_input` for early
 stopping.
