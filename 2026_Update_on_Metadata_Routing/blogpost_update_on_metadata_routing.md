@@ -1,8 +1,8 @@
 # An Update on scikit-learn's Metadata Routing API
 
-*Based on a talk given at EuroSciPy 2026 in Kraków. Metadata routing has been introduced
-gradually in experimental mode since scikit-learn 1.3; coverage is now almost complete,
-and the feature is mature enough that users can use it in real workflows.*
+*Based on a talk given at EuroSciPy 2026 in Kraków [1]. Metadata routing has been
+introduced gradually in experimental mode since scikit-learn 1.3; coverage is now almost
+complete, and the feature is mature enough that users can use it in real workflows.*
 
 ---
 
@@ -47,11 +47,13 @@ Let's walk through an example.
 Imagine a medical study on the effectiveness of a new treatment. Here we have
 observational data that is getting used in that study. Features include "sex", "age",
 "severity", and whether a patient received a medication; the target is the "recovery
-time". This data is naturally biased, because it does *not* come from a randomised
+time". This data is naturally biased, because it does *not* come from a randomized
 trial. It entails all the imbalance and structure that real world data usually implies.
 
 ![Hospital-grouped patient table: features and recovery-time target, with patients
 tagged by hospital](blogpost_images/fig01_hospital_groups.png)
+
+Figure 1: Table of data and target for our example study.
 
 Patients come from different hospitals that differ in systematic factors such as medical
 devices, policies, and the socioeconomic mix of patients. A sample's provenance from a
@@ -62,7 +64,9 @@ treat like "age" or "severity". Instead we keep it as **groups** with shape
 ![Same table with an explicit groups column (Hospital: Blue / Black / Orange) beside
 data and target](blogpost_images/fig02_groups_as_metadata.png)
 
-During cross-validation we want a realistic estimate of how well a model can generalise.
+Figure 2: Table of data and target with an additional `groups` metadata.
+
+During cross-validation we want a realistic estimate of how well a model can generalize.
 If samples from the same hospital appear in both the training and validation fold, the
 model can look better than it will on a new hospital, which is a form of [data
 leakage](https://en.wikipedia.org/wiki/Leakage_(machine_learning)).
@@ -73,6 +77,8 @@ train set *or* the validation set for a given fold:
 
 ![GroupKFold diagram: three folds where each hospital group is wholly in train or
 validation](blogpost_images/fig03_groupkfold.png)
+
+Figure 3: Training and validation set after splitting with `GroupKFold`.
 
 Passing `groups` into `cross_validate` together with a grouped splitter has worked in
 scikit-learn for a long time and keeps functioning the same way:
@@ -86,17 +92,17 @@ cv = GroupKFold(n_splits=2)
 cross_validate(ridge, X, y, cv=cv, groups=groups)
 ```
 
-Going back to our example, `sample_weight`, on the other hand, draws the model’s
-attention toward (or away from) particular samples. If biases we see in our patient data
-set refer to how features are distributed or relate to one another, we can use
-`sample_weight` as a fix. One method to do so is inverse probability of treatment
-weighting (IPTW) in observational studies (see Wilhelm's walkthrough with scikit-learn
-[1]).
+For our patient data set, `sample_weight` draws the model's attention toward (or away
+from) particular samples. It can be used if biases refer to how features are distributed
+or relate to one another. For instance, if we suspect that race, age or socioeconomic
+status of a patient determined if they got the new treatment at all, `sample_weight` can
+re-balance the over- or under-representation of a certain group of patients and draw the
+model to emphasize reducing training error on the higher weighted samples more.
 
-If we suspect that the race, age or socioeconomic status of a patient determined if they
-got the new treatment at all, `sample_weight` can re-balance the over- or
-under-representation of a certain group of patients and draw the model to emphasise
-reducing training error on the higher weighted samples more.
+One method to determine `sample_weight` values is inverse probability of treatment
+weighting (IPTW) in observational studies (see Wilhelm's walkthrough with scikit-learn
+[2]). :probabl. Whiteboard Series has also published an exploration on the usefulness of
+`sample_weight` from a different angle [3].
 
 In practice, since `Ridge.fit` can consume `sample_weight`, you might reasonably try:
 
@@ -110,19 +116,18 @@ cross_validate(ridge, X, y, cv=cv, sample_weight=sample_weight)
 TypeError: got an unexpected keyword argument 'sample_weight'
 ```
 
-In practice you often nest further: you want to `cross_validate` around a `GridSearchCV`
-that tunes `Ridge`, with a scorer that can also take `sample_weight` and a `GroupKFold`
-that needs `groups`. Before routing, that stack failed: `cross_validate` had no way to
-forward `sample_weight` into nested `fit` or `score` calls, even though those methods
-support it. But if we want fairer, less leaky models to predict the treatment effect for
-future patients, we need metadata to move through several layers of other tools by
-contract.
+In practice you often nest further. Maybe you want to `cross_validate` around a
+`GridSearchCV` that tunes `Ridge`, with a scorer that can also take `sample_weight` and
+a `GroupKFold` that needs `groups`. Before routing, that stack failed: `cross_validate`
+had no way to forward `sample_weight` into the nested `fit` and `score` calls, even
+though those methods support it. The same limitation blocked metadata from many
+third-party libraries when combined with scikit-learn's cross-validation tools.
 
-Prior to the metadata routing API, `cross_validate` did not know how to forward
-arbitrary metadata into `fit`. The same limitation blocked metadata from many
-third-party libraries when combined with scikit-learn's cross-validation tools. The
+If we want fairer, less leaky models to predict the treatment effect for future
+patients, we need metadata to move through several layers of other tools by contract.
 Metadata Routing API was built to bridge exactly this gap: you can use it to get your
-metadata to be used inside the functions that know how to consume it.
+metadata to be used inside the functions that consume it.
+
 ---
 
 ## Using the metadata routing API
@@ -135,7 +140,9 @@ mode:
 top level, and set requests where metadata is
 consumed](blogpost_images/fig05_routing_api.png)
 
-See scikit-learn's Metadata Routing User Guide [1] for a full example. 
+Figure 4: The three metadata routing steps: enable, pass at the top, request metadata
+where it gets used. See scikit-learn's Metadata Routing User Guide [4] for a full
+example. 
 
 1. **Enable** the experimental feature. `set_config(enable_metadata_routing=True)` turns
    routing on. Disable it when you no longer need it.
@@ -180,6 +187,9 @@ The new feature allows users to pass a validation set of their liking through a
 HistGradientBoostingClassifier.set_fit_request(X_val=True,
 y_val=True)](blogpost_images/fig06_transform_input.png)
 
+Figure 5: Passing `X_val` through a `Pipeline` with `transform_input` for early
+stopping.
+
 Here `X_val` is transformed like `X_train` at every pipeline step until
 `HistGradientBoostingClassifier.fit` consumes it for early stopping.
 
@@ -187,9 +197,9 @@ Here `X_val` is transformed like `X_train` at every pipeline step until
 
 ## Recent updates and ongoing work
 
-Metadata routing is still experimental, but it is **pretty mature** in practice. Some
-features based on the metadata routing mechanism are already implemented; others are
-still in progress:
+Metadata routing is still experimental, but it is pretty mature in practice. On top of
+the pure routing, we continue developing features based on the metadata routing
+mechanism. Some are already implemented; others are still in progress:
 
 Already available since 1.9: 
 - `TargetEncoder` can use grouped splitters
@@ -199,16 +209,16 @@ In progress:
 - Default requests, so users don't need explicit `set_*_request` for common cases
   ([#31413](https://github.com/scikit-learn/scikit-learn/issues/31413))
 - Callbacks (e.g. `ScoringMonitor`) can accept metadata such as `X_val` and
-  `y_val`([#34137](https://github.com/scikit-learn/scikit-learn/issues/34137)), 
-- a developer API for customised metadata routing functionalities
-  ([#34314](https://github.com/scikit-learn/scikit-learn/issues/34314)) (see Developing
-  estimators compliant with metadata routing [1] for further information)
-- Visualisation and debugging tools for metadata routing
+  `y_val` ([#34137](https://github.com/scikit-learn/scikit-learn/issues/34137))
+- Developer API for customized routing
+  ([#34314](https://github.com/scikit-learn/scikit-learn/issues/34314)) (for further
+  information see "Developing estimators compliant with metadata routing" [5])
+- Visualization and debugging tools for metadata routing
   ([#31535](https://github.com/scikit-learn/scikit-learn/issues/31535))
 
-Once Metadata Routing gets released as a stable feature, the user's code in most cases
-will look as simple as it always was, except we can now pass metadata and it will be
-used internally.
+Once Metadata Routing gets released as a stable feature, the user's code will look as
+simple as it always was for default cases, except we can now pass metadata and it will
+be used internally.
 
 ---
 
@@ -225,18 +235,19 @@ richer than `(X, y)`.
 
 ## References
 
-- [Metadata Routing User Guide](https://scikit-learn.org/stable/metadata_routing.html)
-- [Developing estimators compliant with metadata
+[1] Stefanie Senger, [Scikit-learn’s Metadata Routing
+  API](https://github.com/StefanieSenger/Talks/blob/main/2026_Update_on_Metadata_Routing/Update%20on%20Metadata%20Routing.pdf)
+  (full deck of slides from talk at EuroSciPy 2026)
+
+[2] Florian Wilhelm, [Causal Inference and Propensity Score
+  Methods](https://florianwilhelm.info/2017/04/causal_inference_propensity_score/)
+  (IPTW with scikit-learn)
+
+[3] Vincent Warmerdam, [:probabl. Whiteboard Series — Improving models via
+  subsets](https://www.youtube.com/watch?v=REIg5NH2SNc)
+
+[4] [Metadata Routing User Guide](https://scikit-learn.org/stable/metadata_routing.html) (user-oriented)
+
+[5] [Developing estimators compliant with metadata
   routing](https://scikit-learn.org/stable/auto_examples/miscellaneous/plot_metadata_routing.html)
   (developer-oriented)
-- Adrin Jalali, [*Revenue based scoring in `GridSearchCV`: a case for the new metadata
-  routing in scikit-learn*](https://pretalx.com/pycon-lithuania-2024/talk/LHNGSS/)
-  (PyCon Lithuania 2024)
-- Stefanie Senger, [*Scikit-learn’s Metadata Routing
-  API*](https://github.com/StefanieSenger/Talks/blob/main/2026_Update_on_Metadata_Routing/Update%20on%20Metadata%20Routing.pdf)
-  (full deck of slides from talk at EuroSciPy 2026)
-- Florian Wilhelm, [*Causal Inference and Propensity Score
-  Methods*](https://florianwilhelm.info/2017/04/causal_inference_propensity_score/)
-  (IPTW with scikit-learn)
-- Vincent Warmerdam, [:probabl. Whiteboard Series — Improving models via
-  subsets](https://www.youtube.com/watch?v=REIg5NH2SNc)
